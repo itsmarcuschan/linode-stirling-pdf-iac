@@ -1,0 +1,13 @@
+# Terraform
+.terraform/
+*.tfvars
+*.tfstate
+*.tfstate.*
+crash.log
+
+# SSH
+*.pub
+
+# Ansible
+.vault_pass
+inventory.ini

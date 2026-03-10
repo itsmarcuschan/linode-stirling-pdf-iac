@@ -1,0 +1,19 @@
+name: Checkov Scan
+
+on:
+    pull_request:
+    push:
+
+jobs:
+    checkov:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Run Checkov
+              uses: bridgecrewio/checkov-action@master
+              with:
+                directory: .
+                framework: terraform,ansible
+                quiet: 'true'
