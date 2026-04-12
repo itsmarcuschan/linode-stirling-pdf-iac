@@ -1,4 +1,10 @@
 terraform {
+  cloud {
+    organization = "itsmarcuschan"
+    workspaces {
+      name = "linode-stirling-pdf-iac"
+    }
+  }
   required_version = ">= 1.0"
   required_providers {
     linode = {
