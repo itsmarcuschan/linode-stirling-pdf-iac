@@ -4,5 +4,9 @@ terraform {
       source  = "linode/linode"
       version = "3.11.0"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = "2.8.0"
+    }
   }
 }

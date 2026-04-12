@@ -57,7 +57,7 @@
 
 - name: Copy docker-compose.yml to project
   ansible.builtin.copy:
-    src: ../files/docker-compose.yml
+    src: docker-compose.yml
     dest: /home/runner/docker/docker-compose.yml
     owner: runner
     group: runner
