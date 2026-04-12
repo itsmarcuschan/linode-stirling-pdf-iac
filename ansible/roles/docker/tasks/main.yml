@@ -71,4 +71,4 @@
   community.docker.docker_compose_v2:
     project_src: /opt/stirling-pdf
     state: present
-    detach: true
+    wait: true
