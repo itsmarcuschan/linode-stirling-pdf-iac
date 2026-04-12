@@ -9,6 +9,6 @@ resource "linode_instance" "stirling-pdf" {
 }
 
 resource "local_file" "ansible_inventory" {
-  content  = templatefile("../ansible/inventory.tpl", { ip = linode_instance.stirling-pdf.ip_address })
+  content  = templatefile("../ansible/inventory.tpl", { ip = linode_instance.stirling-pdf.ipv4[0] })
   filename = "../ansible/inventory.ini"
 }
