@@ -21,19 +21,21 @@ jobs:
 
       - name: Generate Ansible inventory
         run: |
-          OUTPUT_ID=$(curl -s \
+          OUTPUTS=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
-            "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID }}/current-state-version-outputs" \
-            | jq -r '.data[] | select(.attributes.name=="instance_ip") | .id')
-          
+            "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID }}/current-state-version-outputs")
+
+          OUTPUT_ID=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_ip") | .id')
           IP=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
             "https://app.terraform.io/api/v2/state-version-outputs/$OUTPUT_ID" \
             | jq -r '.data.attributes.value')
-          
+
+          USER=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_user") | .attributes.value')
+
           echo "::add-mask::$IP"
           echo "[linode]" > ansible/inventory.ini
-          echo "stirling-pdf ansible_host=$IP ansible_user=marcus" >> ansible/inventory.ini
+          echo "stirling-pdf ansible_host=$IP ansible_user=$USER" >> ansible/inventory.ini
 
       - name: Install Ansible collections
         working-directory: ansible

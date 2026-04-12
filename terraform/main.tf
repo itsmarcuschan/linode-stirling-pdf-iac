@@ -13,7 +13,7 @@ resource "linode_instance" "stirling-pdf" {
     user_data = base64encode(<<-EOF
       #cloud-config
       users:
-        - name: marcus
+        - name: ${var.server_user}
           groups: sudo
           shell: /bin/bash
           sudo: ['ALL=(ALL) NOPASSWD:ALL']

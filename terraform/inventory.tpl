@@ -1,2 +1,2 @@
 [linode]
-stirling-pdf ansible_host=${ip} ansible_user=marcus
+stirling-pdf ansible_host=${ip} ansible_user=${user}
