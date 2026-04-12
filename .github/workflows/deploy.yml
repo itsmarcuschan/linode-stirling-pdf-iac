@@ -18,14 +18,3 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Wait for HCP Terraform
-        run: sleep 300
-
-      - name: Install Ansible collections
-        working-directory: ansible
-        run: ansible-galaxy collection install -r requirements.yml
-
-      - name: Ansible Provisioning
-        working-directory: ansible
-        run: ansible-playbook playbooks/site.yml
