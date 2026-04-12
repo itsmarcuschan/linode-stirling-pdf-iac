@@ -11,3 +11,6 @@ crash.log
 # Ansible
 .vault_pass
 inventory.ini
+
+.DS_Store
+.env

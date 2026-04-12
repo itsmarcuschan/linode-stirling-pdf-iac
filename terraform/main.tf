@@ -1,20 +1,14 @@
-terraform {
-  required_providers {
-    linode = {
-      source  = "linode/linode"
-      version = "3.9.0"
-    }
-  }
+provider "linode" {}
+
+resource "linode_instance" "stirling-pdf" {
+  label           = "stirling-pdf"
+  region          = "fr-par"
+  type            = "g6-nanode-1"
+  image           = "linode/ubuntu24.04"
+  authorized_keys = [var.ssh_public_key]
 }
 
-provider "linode" {
-  token = var.linode_token
-}
-
-resource "linode_instance" "iac-Stirling-pdf" {
-  label  = "iac-stirling-pdf"
-  region = "fr-par"
-  type   = "g6-nanode-1"
-  image  = "linode/debian13"
-  authorized_keys = [file("${path.module}/ssh/id_linode.pub")]
+resource "local_file" "ansible_inventory" {
+  content  = templatefile("../ansible/inventory.tpl", { ip = linode_instance.stirling-pdf.ip_address })
+  filename = "../ansible/inventory.ini"
 }

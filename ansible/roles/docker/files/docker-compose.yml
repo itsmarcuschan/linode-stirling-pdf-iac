@@ -1,0 +1,18 @@
+services:
+
+  stirling-pdf:
+    image: stirlingtools/stirling-pdf:2.9.2
+    container_name: stirling-pdf
+    networks:
+      - github-actions
+    ports:
+      - '8080:8080'
+    volumes:
+      - stirling-data:/configs
+    restart: unless-stopped
+
+volumes:
+  stirling-data:
+
+networks:
+  github-actions:
