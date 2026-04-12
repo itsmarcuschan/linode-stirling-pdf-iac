@@ -55,16 +55,20 @@
     groups: docker
     append: true
 
-- name: Copy docker-compose.yml to project
+- name: Create project directory
+  ansible.builtin.file:
+    path: /opt/stirling-pdf
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose.yml
   ansible.builtin.copy:
     src: docker-compose.yml
-    dest: /home/runner/docker/docker-compose.yml
-    owner: runner
-    group: runner
+    dest: /opt/stirling-pdf/docker-compose.yml
     mode: '0644'
 
 - name: Docker compose up -d
   community.docker.docker_compose_v2:
-    project_src: /path/to/your/compose/dir
+    project_src: /opt/stirling-pdf
     state: present
     detach: true

@@ -1,6 +1,13 @@
 ---
 
-- name: Install packages
-  hosts: all
+- hosts: linode
+  gather_facts: false
+  tasks:
+    - name: Wait for SSH connection
+      wait_for_connection:
+        timeout: 120
+
+- name: Install Stirling PDF
+  hosts: linode
   roles:
     - docker
