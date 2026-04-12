@@ -1,6 +1,4 @@
-provider "linode" {
-  token = var.linode_token
-}
+provider "linode" {}
 
 resource "linode_instance" "stirling-pdf" {
   label           = "stirling-pdf"
