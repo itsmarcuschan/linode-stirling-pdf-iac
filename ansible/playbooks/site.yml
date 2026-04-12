@@ -9,6 +9,7 @@
         timeout: 120
 
 - name: Install Stirling PDF
+  become: true
   hosts: linode
   roles:
     - docker
