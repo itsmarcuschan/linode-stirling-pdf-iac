@@ -49,12 +49,6 @@
       - docker-compose-plugin
     state: present
 
-- name: Add user to docker group
-  ansible.builtin.user:
-    name: marcus
-    groups: docker
-    append: true
-
 - name: Create project directory
   ansible.builtin.file:
     path: /opt/stirling-pdf
@@ -71,5 +65,4 @@
   community.docker.docker_compose_v2:
     project_src: /opt/stirling-pdf
     state: present
-    wait: true
-    wait_timeout: 120
+    wait: false

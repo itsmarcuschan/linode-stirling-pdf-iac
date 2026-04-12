@@ -3,18 +3,13 @@ name: "Provision & Deploy"
 on:
   push:
     branches: ["master"]
-  pull_request:
-    branches: ["master"]
 
 permissions:
   contents: read
 
 jobs:
-  terraform-cd:
+  deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: terraform
 
     steps:
       - uses: actions/checkout@v5
@@ -24,26 +19,12 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+      - name: Wait for HCP Terraform
+        run: sleep 300
 
-      - name: Terraform Init
-        run: make init
-
-      - name: Terraform Validate
-        run: make validate
-
-      - name: Terraform Plan
-        run: make plan
-        env:
-          TF_VAR_linode_token: ${{ secrets.LINODE_TOKEN }}
-          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
-
-      - name: Terraform Apply
-        run: make apply
-        env:
-          TF_VAR_linode_token: ${{ secrets.LINODE_TOKEN }}
-          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+      - name: Install Ansible collections
+        working-directory: ansible
+        run: ansible-galaxy collection install -r requirements.yml
 
       - name: Ansible Provisioning
         working-directory: ansible
