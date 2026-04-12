@@ -29,6 +29,6 @@ resource "linode_instance" "stirling-pdf" {
 }
 
 resource "local_file" "ansible_inventory" {
-  content  = templatefile("../ansible/inventory.tpl", { ip = tolist(linode_instance.stirling-pdf.ipv4)[0] })
-  filename = "../ansible/inventory.ini"
+  content  = templatefile("${path.module}/ansible/inventory.tpl", { ip = tolist(linode_instance.stirling-pdf.ipv4)[0] })
+  filename = "${path.module}/ansible/inventory.ini"
 }
