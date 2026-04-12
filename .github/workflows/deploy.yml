@@ -18,24 +18,3 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Wait for HCP Terraform
-        run: sleep 300
-
-      - name: Get IP from HCP Terraform
-        run: |
-          IP=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
-            -H "Content-Type: application/vnd.api+json" \
-            "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID }}/current-state-version-outputs" \
-            | jq -r '.data[] | select(.attributes.name=="instance_ip") | .attributes.value')
-          echo "::add-mask::$IP"
-          sed -i "s/ansible_host=.*/ansible_host=$IP/" ansible/inventory.ini
-
-      - name: Install Ansible collections
-        working-directory: ansible
-        run: ansible-galaxy collection install -r requirements.yml
-
-      - name: Ansible Provisioning
-        working-directory: ansible
-        run: ansible-playbook playbooks/site.yml
