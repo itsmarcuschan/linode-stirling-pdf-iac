@@ -72,3 +72,4 @@
     project_src: /opt/stirling-pdf
     state: present
     wait: true
+    wait_timeout: 120
