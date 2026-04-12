@@ -1,0 +1,14 @@
+---
+
+- name: Wait for SSH
+  hosts: linode
+  gather_facts: false
+  tasks:
+    - name: Wait for SSH connection
+      ansible.builtin.wait_for_connection:
+        timeout: 120
+
+- name: Install Stirling PDF
+  hosts: linode
+  roles:
+    - docker
