@@ -45,6 +45,9 @@ jobs:
           TF_VAR_linode_token: ${{ secrets.LINODE_TOKEN }}
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
 
+      - name: Mask IP
+        run: echo "::add-mask::$(terraform output -raw instance_ip)"
+
       - name: Install Ansible collections
         working-directory: ansible
         run: ansible-galaxy collection install -r requirements.yml
