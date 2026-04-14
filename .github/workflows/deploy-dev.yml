@@ -1,8 +1,9 @@
-name: "Provision & Deploy"
+name: "Provision & Deploy dev"
 
 on:
   push:
-    branches: ["master"]
+    branches:
+      - dev
 
 permissions:
   contents: read
@@ -19,11 +20,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Generate Ansible inventory
+      - name: Generate Ansible inventory prod
         run: |
           OUTPUTS=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
-            "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID }}/current-state-version-outputs")
+            "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID_DEV }}/current-state-version-outputs")
 
           OUTPUT_ID=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_ip") | .id')
           IP=$(curl -s \
