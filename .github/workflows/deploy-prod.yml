@@ -1,0 +1,47 @@
+name: "Provision & Deploy prod"
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Generate Ansible inventory prod
+        run: |
+          OUTPUTS=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
+            "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID_PROD }}/current-state-version-outputs")
+
+          OUTPUT_ID=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_ip_prod") | .id')
+          IP=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
+            "https://app.terraform.io/api/v2/state-version-outputs/$OUTPUT_ID" \
+            | jq -r '.data.attributes.value')
+
+          USER=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_user") | .attributes.value')
+
+          echo "::add-mask::$IP"
+          echo "[linode]" > ansible/inventory.ini
+          echo "stirling-pdf-prod ansible_host=$IP ansible_user=$USER" >> ansible/inventory.ini
+
+      - name: Install Ansible collections
+        working-directory: ansible
+        run: ansible-galaxy collection install -r requirements.yml
+
+      - name: Ansible Provisioning
+        working-directory: ansible
+        run: ansible-playbook playbooks/site.yml
