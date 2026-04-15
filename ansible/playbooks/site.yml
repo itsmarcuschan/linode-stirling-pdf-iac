@@ -6,7 +6,7 @@
   tasks:
     - name: Wait for SSH connection
       ansible.builtin.wait_for_connection:
-        timeout: 300
+        timeout: 60
 
 - name: Install Stirling PDF
   become: true

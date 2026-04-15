@@ -20,6 +20,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Wait 5 minutes
+        run: sleep 300
+
       - name: Generate Ansible inventory prod
         run: |
           OUTPUTS=$(curl -s \
