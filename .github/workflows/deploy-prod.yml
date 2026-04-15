@@ -20,13 +20,16 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Wait 5 minutes
+        run: sleep 300
+
       - name: Generate Ansible inventory prod
         run: |
           OUTPUTS=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
             "https://app.terraform.io/api/v2/workspaces/${{ vars.TF_WORKSPACE_ID_PROD }}/current-state-version-outputs")
 
-          OUTPUT_ID=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_ip_prod") | .id')
+          OUTPUT_ID=$(echo "$OUTPUTS" | jq -r '.data[] | select(.attributes.name=="instance_ip") | .id')
           IP=$(curl -s \
             -H "Authorization: Bearer ${{ secrets.TF_API_TOKEN }}" \
             "https://app.terraform.io/api/v2/state-version-outputs/$OUTPUT_ID" \
